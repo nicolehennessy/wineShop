@@ -50,8 +50,8 @@ public class MainApp {
     }
 
     private static void createWine(Scanner keyboard, Model model) {
-        Wine p = readWine(keyboard);
-        if (model.addWine(p)) {
+        Wine w = readWine(keyboard);
+        if (model.addWine(w)) {
             System.out.println("Wine added to database.");
         } else {
             System.out.println("Wine NOT added to database.");
@@ -61,12 +61,12 @@ public class MainApp {
 
     private static void deleteWine(Scanner keyboard, Model model){
         System.out.print("Enter the name of wine you want to delete: ");
-        int wineID = Integer.parseInt(keyboard.nextLine());
-        Wine p;
+        int id = Integer.parseInt(keyboard.nextLine());
+        Wine w;
         
-        p = model.findWineByWineID(wineID);
-        if (p != null){
-            if (model.removeWine(p)){
+        w = model.findWineById(id);
+        if (w != null){
+            if (model.removeWine(w)){
                 System.out.print("Wine deleted.");
             }
             else{
@@ -81,13 +81,13 @@ public class MainApp {
     
     private static void editWine(Scanner keyboard, Model model){
         System.out.print("Enter the Wine ID of the wine you want to edit: ");
-        int wineID = Integer.parseInt(keyboard.nextLine());
-        Wine p;
+        int id = Integer.parseInt(keyboard.nextLine());
+        Wine w;
         
-        p = model.findWineByWineID(wineID);
-        if (p != null){
-            editWineDetails(keyboard, p);
-            if (model.updateWine(p)){
+        w = model.findWineById(id);
+        if (w != null){
+            editWineDetails(keyboard, w);
+            if (model.updateWine(w)){
                 System.out.print("Wine Updated.");
             }
             else{
@@ -109,7 +109,7 @@ public class MainApp {
             System.out.printf("%10s %20s %20d %15s %22f %20s\n", "WineID", "Name", "YearMade", "Type", "Temperature", "Description");
             for (Wine wi : wines) {
                 System.out.printf("%10s %20s %20d %15s %22f %20s\n",
-                        wi.getWineID(),
+                        wi.getId(),
                         wi.getName(),
                         wi.getYearMade(),
                         wi.getType(),
@@ -135,11 +135,11 @@ public class MainApp {
         tempurature = Double.parseDouble(line);
         description = getString(keyb, "Enter description of wine: ");
 
-        Wine p
+        Wine w
                 = new Wine(name, yearMade, type,
                         tempurature, description);
 
-        return p;
+        return w;
     }
 
     private static String getString(Scanner keyboard, String prompt) {
@@ -147,36 +147,36 @@ public class MainApp {
         return keyboard.nextLine();
     }
 
-    private static void editWineDetails(Scanner keyboard, Wine p) {
+    private static void editWineDetails(Scanner keyboard, Wine w) {
         String name, type, description;
         int yearMade;
         double tempurature;
         String line1, line2; 
         
-        name = getString(keyboard, "Enter name of wine[" + p.getName() + "]: ");
-        line1 = getString(keyboard, "Enter year of wine[" + p.getYearMade() + "]: ");
+        name = getString(keyboard, "Enter name of wine[" + w.getName() + "]: ");
+        line1 = getString(keyboard, "Enter year of wine[" + w.getYearMade() + "]: ");
         yearMade = Integer.parseInt(line1);
-        type = getString(keyboard, "Enter type of wine[" + p.getType() + "]: ");
-        line2 = getString(keyboard, "Enter serving tempurature of wine[" + p.getTempurature() + "]: ");
+        type = getString(keyboard, "Enter type of wine[" + w.getType() + "]: ");
+        line2 = getString(keyboard, "Enter serving tempurature of wine[" + w.getTempurature() + "]: ");
         tempurature = Double.parseDouble(line2);
-        description = getString(keyboard, "Enter description of wine[" + p.getDescription() + "]: ");
+        description = getString(keyboard, "Enter description of wine[" + w.getDescription() + "]: ");
         
         if (name.length() !=0){
-            p.setName(name);
+            w.setName(name);
         }
         if (line1.length() !=0){
             yearMade = Integer.parseInt(line1);
-            p.setYearMade(yearMade);
+            w.setYearMade(yearMade);
         }
         if (type.length() !=0){
-            p.setType(type);
+            w.setType(type);
         }
         if (line2.length() !=0){
             tempurature = Integer.parseInt(line2);
-            p.setTempurature(tempurature);
+            w.setTempurature(tempurature);
         }
         if (description.length() !=0){
-            p.setDescription(description);
+            w.setDescription(description);
         }
     }
 }

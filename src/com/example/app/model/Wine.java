@@ -2,7 +2,7 @@ package com.example.app.model;
 
 public class Wine {
 
-    private int wineID;
+    private int id;
     private String name;
     private int yearMade;
     private String type;
@@ -14,7 +14,7 @@ public class Wine {
     }
 
     public Wine(int id, String n, int y, String ty, double t, String d) {
-        this.wineID = id;
+        this.id = id;
         this.name = n;
         this.yearMade = y;
         this.type = ty;
@@ -23,12 +23,12 @@ public class Wine {
         
     }
 
-    public int getWineID(){
-        return wineID;
+    public int getId(){
+        return id;
     }
     
-    public void setWineID(int wineID){
-        this.wineID = wineID;
+    public void setId(int id){
+        this.id = id;
     }
     
     public String getName() {

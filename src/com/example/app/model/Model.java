@@ -11,23 +11,27 @@ public class Model {
 
     private static Model instance = null;
 
-    public static synchronized Model getInstance() {
+    public static  Model getInstance() {
         if (instance == null) {
             instance = new Model();
         }
         return instance;
     }
 
-    private List<Wine> wines;
-    private WineTableGateway gateway;
+    List<Wine> wines;
+    List<Winery> winerys;
+    WineTableGateway wineGateway;
+    WineryTableGateway wineryGateway;
 
     private Model() {
 
         try {
             Connection conn = DBConnection.getInstance();
-            this.gateway = new WineTableGateway(conn);
+            this.wineGateway = new WineTableGateway(conn);
+            this.wineryGateway = new WineryTableGateway(conn);
             
-            this.wines = this.gateway.getWines();
+            this.wines = this.wineGateway.getWines();
+            this.winerys = this.wineryGateway.getWinerys();
         } 
         catch (ClassNotFoundException ex) {
             Logger.getLogger(Model.class.getName()).log(Level.SEVERE, null, ex);
@@ -41,13 +45,14 @@ public class Model {
         return new ArrayList<Wine>(this.wines);
     }
 
-    public boolean addWine(Wine p) {
+    public boolean addWine(Wine w) {
         boolean result = false;
         try{
-            int wineID = this.gateway.insertWine(p.getName(),p.getYearMade(),p.getType(),p.getTempurature(),p.getDescription());
-            if (wineID != -1){
-                p.setWineID(wineID);
-                this.wines.add(p);
+            int id = this.wineGateway.insertWine(
+            w.getName(),w.getYearMade(),w.getType(),w.getTempurature(),w.getDescription()w.getWineryId);
+            if (id != -1){
+                w.setId(id);
+                this.wines.add(w);
                 result = true;
             }
         }
@@ -57,13 +62,13 @@ public class Model {
         return result;
     }
         
-    public boolean removeWine(Wine p) {
+    public boolean removeWine(Wine w) {
         boolean removed = false;
         
         try{
-            removed = this.gateway.deleteWine(p.getWineID());
+            removed = this.wineGateway.deleteWine(w.getId());
             if (removed){
-                removed = this.wines.remove(p);
+                removed = this.wines.remove(w);
             } 
         }
 
@@ -73,33 +78,99 @@ public class Model {
         return removed;
     }
 
-    public Wine findWineByWineID(int wineID) {
-        Wine p = null;
+    public Wine findWineById(int id) {
+        Wine w = null;
         int i = 0;
         boolean found = false;
         while (i < this.wines.size() && !found) {
-            p = this.wines.get(i);
-            if (p.getWineID() == wineID) {
+            w = this.wines.get(i);
+            if (w.getId() == id) {
                 found = true;
             } else {
                 i++;
             }
         }
         if (!found) {
-            p = null;
+            w = null;
         }
-        return p;
+        return w;
     }
 
-    boolean updateWine(Wine p) {
+    boolean updateWine(Wine w) {
         boolean updated = false;
         
         try{
-            updated = this.gateway.updateWine(p);
+            updated = this.wineGateway.updateWine(w);
         }
         catch (SQLException ex){
             Logger.getLogger(Model.class.getName()).log(Level.SEVERE, null, ex);
         }
+        return updated;
+    }
+    public boolean addWinery(Winery wy) {
+        boolean result = false;
+        try {
+            int id = this.wineryGateway.insertWinery(wy.getWineryName(), wy.getAddress(), wy.getContactName(), wy.getPhoneNo(), wy.getEmail(), wy.getWebAddress());
+            if (id != -1) {
+                wy.setId(id);
+                this.winerys.add(wy);
+                result = true;
+            }
+        }
+        catch (SQLException ex) {
+            Logger.getLogger(Model.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return result;
+    }
+
+    public boolean removeWinery(Winery wy) {
+        boolean removed = false;
+
+        try {
+            removed = this.wineryGateway.deleteWinery(wy.getId());
+            if (removed) {
+                removed = this.winerys.remove(wy);
+            }
+        }
+        catch (SQLException ex) {
+            Logger.getLogger(Model.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return removed;
+    }
+
+    public List<Winery> getWinerys() {
+        return this.winerys;
+    }
+
+    Winery findWineryById(int id) {
+        Winery wy = null;
+        int i = 0;
+        boolean found = false;
+        while (i < this.winerys.size() && !found) {
+            wy = this.winerys.get(i);
+            if (wy.getId() == id) {
+                found = true;
+            } else {
+                i++;
+            }
+        }
+        if (!found) {
+            wy = null;
+        }
+        return wy;
+    }
+
+    boolean updateWinery(Winery wy) {
+        boolean updated = false;
+
+        try {
+            updated = this.wineryGateway.updateWinery(wy);
+        }
+        catch (SQLException ex) {
+            Logger.getLogger(Model.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
         return updated;
     }
 }

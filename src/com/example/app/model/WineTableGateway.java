@@ -87,7 +87,7 @@ public class WineTableGateway {
         int wineID, yearMade; 
         double tempurature;
 
-        Wine p;                   // a Wine object created from a row in the result of the query
+        Wine w;                   // a Wine object created from a row in the result of the query
 
         // execute an SQL SELECT statement to get a java.util.ResultSet representing
         // the results of the SELECT statement
@@ -107,15 +107,15 @@ public class WineTableGateway {
             tempurature = rs.getDouble(COLUMN_TEMPURATURE);
             description = rs.getString(COLUMN_DESCRIPTION);
 
-            p = new Wine(wineID, name, yearMade,  type, tempurature, description);
-            wines.add(p);
+            w = new Wine(wineID, name, yearMade,  type, tempurature, description);
+            wines.add(w);
         }
 
         // return the list of Wine objects retrieved
         return wines;
     }
 
-    boolean updateWine(Wine p) throws SQLException {
+    boolean updateWine(Wine w) throws SQLException {
         String query;
         PreparedStatement stmt;
         int numRowsAffected;
@@ -129,11 +129,11 @@ public class WineTableGateway {
                 "WHERE" + COLUMN_WINEID + " = ?";
         
         stmt = mConnection.prepareStatement(query);
-        stmt.setString(1, p.getName());
-        stmt.setInt(2, p.getYearMade());
-        stmt.setString(3, p.getType());
-        stmt.setDouble(4, p.getTempurature());
-        stmt.setString(5, p.getDescription());
+        stmt.setString(1, w.getName());
+        stmt.setInt(2, w.getYearMade());
+        stmt.setString(3, w.getType());
+        stmt.setDouble(4, w.getTempurature());
+        stmt.setString(5, w.getDescription());
         
         numRowsAffected = stmt.executeUpdate();
         
