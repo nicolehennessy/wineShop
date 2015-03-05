@@ -49,7 +49,7 @@ public class Model {
         boolean result = false;
         try{
             int id = this.wineGateway.insertWine(
-            w.getName(),w.getYearMade(),w.getType(),w.getTempurature(),w.getDescription()w.getWineryId);
+                    w.getName(),w.getYearMade(),w.getType(),w.getTempurature(),w.getDescription(),w.getWineryId());
             if (id != -1){
                 w.setId(id);
                 this.wines.add(w);
@@ -127,7 +127,7 @@ public class Model {
         boolean removed = false;
 
         try {
-            removed = this.wineryGateway.deleteWinery(wy.getId());
+            removed = this.wineryGateway.deleteWinery(wy.getWineryId());
             if (removed) {
                 removed = this.winerys.remove(wy);
             }
@@ -149,7 +149,7 @@ public class Model {
         boolean found = false;
         while (i < this.winerys.size() && !found) {
             wy = this.winerys.get(i);
-            if (wy.getId() == id) {
+            if (wy.getWineryId() == id) {
                 found = true;
             } else {
                 i++;

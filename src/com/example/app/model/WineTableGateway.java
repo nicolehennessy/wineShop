@@ -10,12 +10,13 @@ import java.util.List;
 
 public class WineTableGateway {
     private static final String TABLE_NAME = "wine";
-    private static final String COLUMN_WINEID = "wineID";
+    private static final String COLUMN_WINEID = "id";
     private static final String COLUMN_NAME = "name";
     private static final String COLUMN_YEARMADE = "yearMade";
     private static final String COLUMN_TYPE = "type";
     private static final String COLUMN_TEMPURATURE = "tempurature";
     private static final String COLUMN_DESCRIPTION = "description";
+    private static final String COLUMN_WINERY_ID = "winery_id";
 
     private Connection mConnection;
 
@@ -23,7 +24,7 @@ public class WineTableGateway {
         mConnection = connection;
     }
 
-    public int insertWine(String n, int y, String ty, double t,  String d) throws SQLException {
+    public int insertWine(String n, int y, String ty, double t,  String d, int wId) throws SQLException {
         String query;       // the SQL query to execute
         PreparedStatement stmt;         // the java.sql.PreparedStatement object used to execute the SQL query
         int numRowsAffected;
@@ -35,8 +36,9 @@ public class WineTableGateway {
                 COLUMN_YEARMADE + ", " +
                 COLUMN_TYPE + ", " +
                 COLUMN_TEMPURATURE + ", " +
-                COLUMN_DESCRIPTION +
-                ") VALUES (?, ?, ?, ?, ?)";
+                COLUMN_DESCRIPTION + ", " +
+                COLUMN_WINERY_ID +
+                ") VALUES (?, ?, ?, ?, ?, ?)";
 
         // create a PreparedStatement object to execute the query and insert the values into the query
         stmt = mConnection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
@@ -46,6 +48,7 @@ public class WineTableGateway {
         stmt.setString(3, ty);
         stmt.setDouble(4, t);        
         stmt.setString(5, d);
+        stmt.setInt(6, wId);
 
         //  execute the query and make sure that one and only one row was inserted into the database
         numRowsAffected = stmt.executeUpdate();
@@ -84,7 +87,7 @@ public class WineTableGateway {
                                         // in the result of the query the id of a programmer
 
         String  name, type, description;
-        int wineID, yearMade; 
+        int wineID, yearMade, wineryId; 
         double tempurature;
 
         Wine w;                   // a Wine object created from a row in the result of the query
@@ -106,8 +109,9 @@ public class WineTableGateway {
             type = rs.getString(COLUMN_TYPE);
             tempurature = rs.getDouble(COLUMN_TEMPURATURE);
             description = rs.getString(COLUMN_DESCRIPTION);
+            wineryId = rs.getInt(COLUMN_WINERY_ID);
 
-            w = new Wine(wineID, name, yearMade,  type, tempurature, description);
+            w = new Wine(wineID, name, yearMade,  type, tempurature, description, wineryId);
             wines.add(w);
         }
 
@@ -126,7 +130,8 @@ public class WineTableGateway {
                 COLUMN_TYPE + " = ?, " +
                 COLUMN_TEMPURATURE + " = ?, " +
                 COLUMN_DESCRIPTION + " = ?, " +
-                "WHERE" + COLUMN_WINEID + " = ?";
+                COLUMN_WINERY_ID + " = ? " +
+                " WHERE " + COLUMN_WINEID + " = ?";
         
         stmt = mConnection.prepareStatement(query);
         stmt.setString(1, w.getName());
@@ -134,6 +139,8 @@ public class WineTableGateway {
         stmt.setString(3, w.getType());
         stmt.setDouble(4, w.getTempurature());
         stmt.setString(5, w.getDescription());
+        stmt.setInt(6, w.getWineryId());
+        stmt.setInt(7, w.getId());
         
         numRowsAffected = stmt.executeUpdate();
         

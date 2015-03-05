@@ -8,19 +8,20 @@ public class Wine {
     private String type;
     private double tempurature;
     private String description;
+    private int wineryId;
 
-    public Wine(String n, int y, String ty, double t, String d) {
-        this(-1, n, y, ty, t, d);
+    public Wine(String n, int y, String ty, double t, String d, int wId) {
+        this(-1, n, y, ty, t, d, wId);
     }
 
-    public Wine(int id, String n, int y, String ty, double t, String d) {
+    public Wine(int id, String n, int y, String ty, double t, String d, int wId) {
         this.id = id;
         this.name = n;
         this.yearMade = y;
         this.type = ty;
         this.tempurature = t;
         this.description = d;
-        
+        this.wineryId = wId;
     }
 
     public int getId(){
@@ -93,6 +94,14 @@ public class Wine {
      */
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public int getWineryId() {
+        return wineryId;
+    }
+
+    public void setWineryId(int wineryId) {
+        this.wineryId = wineryId;
     }
 
 

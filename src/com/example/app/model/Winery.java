@@ -6,11 +6,12 @@ public class Winery {
     private String wineryName;
     private String address;
     private String contactName;
-    private int phoneNo;
+    private String phoneNo;
     private String email;
     private String webAddress;
+    private int wineId;
     
-    public Winery(int id, String wn, String a, String cn,int pn, String e,String wa ) {
+    public Winery(int id, String wn, String a, String cn,String pn, String e,String wa ) {
         this.id = id;
         this.wineryName = wn;
         this.address = a;
@@ -21,11 +22,11 @@ public class Winery {
         
     }
     
-    public Winery(String wn, String a,String cn,String e,String wa){
-        this(-1,wn,a,cn,000000000,e,wa);
+    public Winery(String wn, String a,String cn, String pn, String e, String wa){
+        this(-1,wn,a,cn,pn,e,wa);
     }
     
-    public int getId(){
+    public int getWineryId(){
         return id;
     }
     public String getWineryName(){
@@ -37,7 +38,7 @@ public class Winery {
     public String getContactName(){
         return contactName;
     }
-    public int getPhoneNo(){
+    public String getPhoneNo(){
         return phoneNo;
     }
     public String getEmail(){
@@ -58,7 +59,7 @@ public class Winery {
     public void setContactName(String contactName){
         this.contactName=contactName;
     }
-    public void setPhoneNo(int phoneNo){
+    public void setPhoneNo(String phoneNo){
         this.phoneNo=phoneNo;
     }    
     public void setEmail(String email){
@@ -66,5 +67,13 @@ public class Winery {
     }
     public void setWebAddress(String webAddress){
         this.webAddress=webAddress;
+    }
+
+    public int getWineId() {
+        return wineId;
+    }
+
+    public void setWineId(int wineId) {
+        this.wineId = wineId;
     }
 }
