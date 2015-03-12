@@ -25,7 +25,7 @@ public class Winery {
     public Winery(String wn, String a,String cn, String pn, String e, String wa){
         this(-1,wn,a,cn,pn,e,wa);
     }
-    
+
     public int getWineryId(){
         return id;
     }

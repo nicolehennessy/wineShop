@@ -3,20 +3,20 @@ package com.example.app.model;
 public class Wine {
 
     private int id;
-    private String name;
+    private String wineryName;
     private int yearMade;
     private String type;
     private double tempurature;
     private String description;
     private int wineryId;
 
-    public Wine(String n, int y, String ty, double t, String d, int wId) {
-        this(-1, n, y, ty, t, d, wId);
+    public Wine(String wn, int y, String ty, double t, String d, int wId) {
+        this(-1, wn, y, ty, t, d, wId);
     }
 
-    public Wine(int id, String n, int y, String ty, double t, String d, int wId) {
+    public Wine(int id, String wn, int y, String ty, double t, String d, int wId) {
         this.id = id;
-        this.name = n;
+        this.wineryName = wn;
         this.yearMade = y;
         this.type = ty;
         this.tempurature = t;
@@ -32,12 +32,12 @@ public class Wine {
         this.id = id;
     }
     
-    public String getName() {
-        return name;
+    public String getWineryName() {
+        return wineryName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setWineryName(String wineryName) {
+        this.wineryName = wineryName;
     }
 
     /**

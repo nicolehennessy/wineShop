@@ -128,13 +128,13 @@ public class WineryTableGateway {
         int numRowsAffected;
         
         // the required SQL INSERT statement with place holders for the values to be inserted into the database
-        query = "UPDATE" + TABLE_NAME + "SET" +
+        query = "UPDATE " + TABLE_NAME + " SET " +
               COLUMN_WINERYNAME + " = ?, " +  
               COLUMN_ADDRESS + " = ?, " + 
               COLUMN_CONTACTNAME + " = ?, " + 
               COLUMN_PHONENO + " = ?, " + 
               COLUMN_EMAIL + " = ?, " + 
-              COLUMN_WEBADDRESS + " = ?, " + 
+              COLUMN_WEBADDRESS + " = ? " + 
               " WHERE " + COLUMN_ID + " = ?";
         
         // create a PreparedStatement object to execute the query and insert the new values into the query
@@ -145,6 +145,7 @@ public class WineryTableGateway {
         stmt.setString(4, wy.getPhoneNo());
         stmt.setString(5, wy.getEmail());
         stmt.setString(6, wy.getWebAddress());
+        stmt.setInt(7, wy.getWineryId());
         
         //execute query
         numRowsAffected = stmt.executeUpdate();

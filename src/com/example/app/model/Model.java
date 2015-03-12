@@ -49,7 +49,7 @@ public class Model {
         boolean result = false;
         try{
             int id = this.wineGateway.insertWine(
-                    w.getName(),w.getYearMade(),w.getType(),w.getTempurature(),w.getDescription(),w.getWineryId());
+                    w.getWineryName(),w.getYearMade(),w.getType(),w.getTempurature(),w.getDescription(),w.getWineryId());
             if (id != -1){
                 w.setId(id);
                 this.wines.add(w);

@@ -48,7 +48,12 @@ public class WineTableGateway {
         stmt.setString(3, ty);
         stmt.setDouble(4, t);        
         stmt.setString(5, d);
-        stmt.setInt(6, wId);
+        if (wId == -1) {
+            stmt.setNull(6, java.sql.Types.INTEGER);
+        }
+        else {
+            stmt.setInt(6, wId);
+        }
 
         //  execute the query and make sure that one and only one row was inserted into the database
         numRowsAffected = stmt.executeUpdate();
@@ -110,6 +115,9 @@ public class WineTableGateway {
             tempurature = rs.getDouble(COLUMN_TEMPURATURE);
             description = rs.getString(COLUMN_DESCRIPTION);
             wineryId = rs.getInt(COLUMN_WINERY_ID);
+            if (rs.wasNull()) {
+                wineryId = -1;
+            }
 
             w = new Wine(wineID, name, yearMade,  type, tempurature, description, wineryId);
             wines.add(w);
@@ -134,12 +142,17 @@ public class WineTableGateway {
                 " WHERE " + COLUMN_WINEID + " = ?";
         
         stmt = mConnection.prepareStatement(query);
-        stmt.setString(1, w.getName());
+        stmt.setString(1, w.getWineryName());
         stmt.setInt(2, w.getYearMade());
         stmt.setString(3, w.getType());
         stmt.setDouble(4, w.getTempurature());
         stmt.setString(5, w.getDescription());
-        stmt.setInt(6, w.getWineryId());
+        if (w.getWineryId() == -1) {
+            stmt.setNull(6, java.sql.Types.INTEGER);
+        }
+        else {
+            stmt.setInt(6, w.getWineryId());
+        }
         stmt.setInt(7, w.getId());
         
         numRowsAffected = stmt.executeUpdate();

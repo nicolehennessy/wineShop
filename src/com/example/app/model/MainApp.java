@@ -52,7 +52,7 @@ public class MainApp {
                 }
                 
                 case 5: {
-                    System.out.println("Creating ry.");
+                    System.out.println("Creating winery.");
                     createWinery(keyboard, model);
                     break;
                 }
@@ -73,7 +73,7 @@ public class MainApp {
                     
                 }
             }
-        } while (opt != 5);
+        } while (opt != 9);
         System.out.println("Goodbye");
     }
 
@@ -138,7 +138,7 @@ public class MainApp {
             for (Wine wi : wines) {
                 System.out.printf("%10s %20s %20d %15s %22f %20s %10d\n",
                         wi.getId(),
-                        wi.getName(),
+                        wi.getWineryName(),
                         wi.getYearMade(),
                         wi.getType(),
                         wi.getTempurature(),
@@ -150,13 +150,14 @@ public class MainApp {
 
     }
 
-    private static Wine readWine(Scanner keyb) {
-        String name, type, description;
+    private static Wine readWine(Scanner keyb) 
+    {
+        String wineryName, type, description;
         int yearMade, wineryId;
         double tempurature;
         String line;
 
-        name = getString(keyb, "Enter name of wine: ");
+        wineryName = getString(keyb, "Enter name of wine: ");
         line = getString(keyb, "Enter year of wine: ");
         yearMade = Integer.parseInt(line);
         type = getString(keyb, "Enter type of wine: ");
@@ -167,19 +168,19 @@ public class MainApp {
         wineryId = Integer.parseInt(line);
 
         Wine w
-                = new Wine(name, yearMade, type,
+                = new Wine(wineryName, yearMade, type,
                         tempurature, description, wineryId);
 
         return w;
     }
 
     private static void editWineDetails(Scanner keyboard, Wine w) {
-        String name, type, description;
+        String wineryName, type, description;
         int yearMade, wineryId;
         double tempurature;
         String line1, line2, line3; 
         
-        name = getString(keyboard, "Enter name of wine[" + w.getName() + "]: ");
+        wineryName = getString(keyboard, "Enter name of wine[" + w.getWineryName() + "]: ");
         line1 = getString(keyboard, "Enter year of wine[" + w.getYearMade() + "]: ");
         type = getString(keyboard, "Enter type of wine[" + w.getType() + "]: ");
         line2 = getString(keyboard, "Enter serving tempurature of wine[" + w.getTempurature() + "]: ");
@@ -187,8 +188,8 @@ public class MainApp {
         line3 = getString(keyboard, "Enter winery id where the wine was made [" + w.getWineryId()+ "]: ");
         wineryId = Integer.parseInt(line3);
         
-        if (name.length() !=0){
-            w.setName(name);
+        if (wineryName.length() !=0){
+            w.setWineryName(wineryName);
         }
         if (line1.length() !=0){
             yearMade = Integer.parseInt(line1);
@@ -222,7 +223,7 @@ public class MainApp {
     }
 
     private static void deleteWinery(Scanner keyboard, Model model){
-        System.out.print("Enter the name of winery you want to delete: ");
+        System.out.print("Enter the id of winery you want to delete: ");
         int id = Integer.parseInt(keyboard.nextLine());
         Winery wy;
         
@@ -268,17 +269,16 @@ public class MainApp {
         if (winerys.isEmpty()) {
             System.out.println("There are no winerys in the database");
         } else {
-            System.out.printf("%10s %20s %20s %20s %15s %60s %60s %10s\n", "WineryId", "Winery Name", "Address", "Contact Name", "Phone No", "Email","Web Address", "Wine");
+            System.out.printf("%10s %20s %20s %20s %15s %60s %60s\n", "WineryId", "Winery Name", "Address", "Contact Name", "Phone No", "Email","Web Address");
             for (Winery wy : winerys) {
-                System.out.printf("%10s %20s %20s %20s %15s %60s %60s %10s\n",
+                System.out.printf("%10s %20s %20s %20s %15s %60s %60s\n",
                         wy.getWineryId(),
                         wy.getWineryName(),
                         wy.getAddress(),
                         wy.getContactName(),
                         wy.getPhoneNo(),
                         wy.getEmail(),
-                        wy.getWebAddress(),
-                        wy.getWineId()
+                        wy.getWebAddress()
                 );
             }
         }
@@ -288,8 +288,6 @@ public class MainApp {
 
     private static Winery readWinery(Scanner keyb) {
         String wineryName, address, contactName, phoneNo, email, webAddress;
-        int wineId;
-        String line;
 
         wineryName = getString(keyb, "Enter name of winery: ");        
         address = getString(keyb, "Enter address of winery: ");
@@ -297,36 +295,21 @@ public class MainApp {
         phoneNo = getString(keyb, "Enter description of winery: ");
         email = getString(keyb, "Enter email of winery: ");
         webAddress = getString(keyb, "Enter webAddress of winery: ");
-        line = getString(keyb, "Enter wine id where winery was ordered from: ");
-        wineId = Integer.parseInt(line);
         
-        
-        Winery wy
-                = new Winery(
-                        wineryName, 
-                        address , 
-                        contactName,
-                        phoneNo, email, webAddress, wineId
-                );
-
+        Winery wy = new Winery(wineryName,address,contactName,phoneNo, email, webAddress);
         
         return wy;
     }
 
     private static void editWineryDetails(Scanner keyboard, Winery wy) {
         String wineryName,address,contactName,phoneNo,email,webAddress;
-        int wineId;
-        String line1; 
         
         wineryName = getString(keyboard, "Enter name of winery[" + wy.getWineryName() + "]: ");        
         address = getString(keyboard, "Enter address of winery[" + wy.getAddress() + "]:" );
         contactName = getString(keyboard, "Enter contact name of winery owner[" + wy.getContactName() + "]: ");
         phoneNo = getString(keyboard, "Enter description of winery[" + wy.getPhoneNo() + "]:  ");
         email = getString(keyboard, "Enter email of winery[" + wy.getEmail() + "]:  ");
-        webAddress = getString(keyboard, "Enter webAddress of winery[" + wy.getWineId() + "]: ");
-        line1 = getString(keyboard, "Enter wine id where winery was ordered from: ");
-        wineId = Integer.parseInt(line1);
-
+        webAddress = getString(keyboard, "Enter webAddress of winery[" + wy.getWebAddress() + "]: ");
         
         if (wineryName.length() !=0){
             wy.setWineryName(wineryName);
@@ -347,11 +330,6 @@ public class MainApp {
         if (webAddress.length() !=0){
             wy.setWebAddress(webAddress);
         }
-        if (line1.length() !=0){
-            wineId = Integer.parseInt(line1);
-            wy.setWineId(wineId);
-        }
-        
     }
 
     private static String getString(Scanner keyboard, String prompt) {
