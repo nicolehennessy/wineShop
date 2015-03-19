@@ -30,7 +30,7 @@ public class WineTableGateway {
         int numRowsAffected;
         int wineID = -1;
 
-        // the required SQL INSERT statement with place holders for the values to be inserted into the database
+        // the required SQL INSERT statement with place holders Blah for the values to be inserted into the database
         query = "INSERT INTO " + TABLE_NAME + " (" +
                 COLUMN_NAME + ", " +
                 COLUMN_YEARMADE + ", " +
