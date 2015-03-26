@@ -11,7 +11,7 @@ public class Model {
 
     private static Model instance = null;
 
-    public static  Model getInstance() {
+    public static  Model getInstance() throws DataAccessException {
         if (instance == null) {
             instance = new Model();
         }
@@ -23,7 +23,7 @@ public class Model {
     WineTableGateway wineGateway;
     WineryTableGateway wineryGateway;
 
-    private Model() {
+    private Model() throws DataAccessException {
 
         try {
             Connection conn = DBConnection.getInstance();
@@ -34,10 +34,10 @@ public class Model {
             this.winerys = this.wineryGateway.getWinerys();
         } 
         catch (ClassNotFoundException ex) {
-            Logger.getLogger(Model.class.getName()).log(Level.SEVERE, null, ex);
+            throw new DataAccessException("Exception Initalising Model Object: " + ex.getMessage());
         } 
         catch (SQLException ex) {
-            Logger.getLogger(Model.class.getName()).log(Level.SEVERE, null, ex);
+            throw new DataAccessException("Exception Initalising Model Object: " + ex.getMessage());
         }
     }
 
@@ -45,7 +45,7 @@ public class Model {
         return new ArrayList<Wine>(this.wines);
     }
 
-    public boolean addWine(Wine w) {
+    public boolean addWine(Wine w) throws DataAccessException {
         boolean result = false;
         try{
             int id = this.wineGateway.insertWine(
@@ -57,12 +57,13 @@ public class Model {
             }
         }
         catch(SQLException ex){
-            Logger.getLogger(Model.class.getName()).log(Level.SEVERE,null,ex);
+            throw new DataAccessException("Exception Adding wine: " + ex.getMessage());
+
         }
         return result;
     }
         
-    public boolean removeWine(Wine w) {
+    public boolean removeWine(Wine w) throws DataAccessException {
         boolean removed = false;
         
         try{
@@ -73,7 +74,8 @@ public class Model {
         }
 
         catch(SQLException ex){
-            Logger.getLogger(Model.class.getName()).log(Level.SEVERE,null,ex);
+            throw new DataAccessException("Exception removing wine: " + ex.getMessage());
+
         }
         return removed;
     }
@@ -96,18 +98,19 @@ public class Model {
         return w;
     }
 
-    boolean updateWine(Wine w) {
+    boolean updateWine(Wine w) throws DataAccessException {
         boolean updated = false;
         
         try{
             updated = this.wineGateway.updateWine(w);
         }
         catch (SQLException ex){
-            Logger.getLogger(Model.class.getName()).log(Level.SEVERE, null, ex);
+            throw new DataAccessException("Exception updating wine: " + ex.getMessage());
         }
         return updated;
     }
-    public boolean addWinery(Winery wy) {
+
+    public boolean addWinery(Winery wy) throws DataAccessException {
         boolean result = false;
         try {
             int id = this.wineryGateway.insertWinery(wy.getWineryName(), wy.getAddress(), wy.getContactName(), wy.getPhoneNo(), wy.getEmail(), wy.getWebAddress());
@@ -118,12 +121,12 @@ public class Model {
             }
         }
         catch (SQLException ex) {
-            Logger.getLogger(Model.class.getName()).log(Level.SEVERE, null, ex);
+            throw new DataAccessException("Exception adding winery: " + ex.getMessage());
         }
         return result;
     }
 
-    public boolean removeWinery(Winery wy) {
+    public boolean removeWinery(Winery wy) throws DataAccessException {
         boolean removed = false;
 
         try {
@@ -133,16 +136,16 @@ public class Model {
             }
         }
         catch (SQLException ex) {
-            Logger.getLogger(Model.class.getName()).log(Level.SEVERE, null, ex);
+            throw new DataAccessException("Exception remove winery: " + ex.getMessage());
         }
 
         return removed;
     }
-
+   
     public List<Winery> getWinerys() {
         return this.winerys;
     }
-
+    
     Winery findWineryById(int id) {
         Winery wy = null;
         int i = 0;
@@ -161,14 +164,14 @@ public class Model {
         return wy;
     }
 
-    boolean updateWinery(Winery wy) {
+    boolean updateWinery(Winery wy) throws DataAccessException {
         boolean updated = false;
 
         try {
             updated = this.wineryGateway.updateWinery(wy);
         }
         catch (SQLException ex) {
-            Logger.getLogger(Model.class.getName()).log(Level.SEVERE, null, ex);
+            throw new DataAccessException("Exception updating winery: " + ex.getMessage());
         }
 
         return updated;

@@ -7,77 +7,83 @@ public class MainApp {
 
     public static void main(String[] args) {
         Scanner keyboard = new Scanner(System.in);
-        Model model = Model.getInstance();
-        int opt;
+        Model model;
+        int opt = 9;
         do {
-            System.out.println("1. Create new Wine");
-            System.out.println("2. Delete existing Wine");
-            System.out.println("3. Edit existing Wine");
-            System.out.println("4. View all Wines");
-            System.out.println();
-            System.out.println("5. Create new Winery");
-            System.out.println("6. Delete existing Winery");
-            System.out.println("7. Edit existing Winery");
-            System.out.println("8. View all Winerys");
-            System.out.println();
-            System.out.println("9. Exit");
-            System.out.println();
+            try{
+                model  = Model.getInstance();
+                System.out.println("1. Create new Wine");
+                System.out.println("2. Delete existing Wine");
+                System.out.println("3. Edit existing Wine");
+                System.out.println("4. View all Wines");
+                System.out.println();
+                System.out.println("5. Create new Winery");
+                System.out.println("6. Delete existing Winery");
+                System.out.println("7. Edit existing Winery");
+                System.out.println("8. View all Winerys");
+                System.out.println();
+                System.out.println("9. Exit");
+                System.out.println();
 
-            System.out.print("Enter option: ");
-            String line = keyboard.nextLine();
-            opt = Integer.parseInt(line);
+                opt = getInt(keyboard, "Enter option: " , 9);
 
-            System.out.println("You chose option " + opt);
+                System.out.println("You chose option " + opt);
 
-            switch (opt) {
-                case 1: {
-                    System.out.println("Creating wine.");
-                    createWine(keyboard, model);
-                    break;
-                }
-                case 2: {
-                    System.out.println("Deleting wine.");
-                    deleteWine(keyboard, model);
-                    break;
-                }
-                case 3: {
-                    System.out.println("Editing wine.");
-                    editWine(keyboard, model);
-                    break;
-                }
-                case 4: {
-                    System.out.println("Viewing wine.");
-                    viewWines(model);
-                    break;
-                }
-                
-                case 5: {
-                    System.out.println("Creating winery.");
-                    createWinery(keyboard, model);
-                    break;
-                }
-                case 6: {
-                    System.out.println("Deleting winery.");
-                    deleteWinery(keyboard, model);
-                    break;
-                }
-                case 7: {
-                    System.out.println("Editing winery.");
-                    editWinery(keyboard, model);
-                    break;
-                }
-                case 8: {
-                    System.out.println("Viewing winery.");
-                    viewWinerys(model);
-                    break;
-                    
+                switch (opt) {
+                    case 1: {
+                        System.out.println("Creating wine.");
+                        createWine(keyboard, model);
+                        break;
+                    }
+                    case 2: {
+                        System.out.println("Deleting wine.");
+                        deleteWine(keyboard, model);
+                        break;
+                    }
+                    case 3: {
+                        System.out.println("Editing wine.");
+                        editWine(keyboard, model);
+                        break;
+                    }
+                    case 4: {
+                        System.out.println("Viewing wine.");
+                        viewWines(model);
+                        break;
+                    }
+
+                    case 5: {
+                        System.out.println("Creating winery.");
+                        createWinery(keyboard, model);
+                        break;
+                    }
+                    case 6: {
+                        System.out.println("Deleting winery.");
+                        deleteWinery(keyboard, model);
+                        break;
+                    }
+                    case 7: {
+                        System.out.println("Editing winery.");
+                        editWinery(keyboard, model);
+                        break;
+                    }
+                    case 8: {
+                        System.out.println("Viewing winery.");
+                        viewWinerys(model);
+                        break;
+
+                    }
                 }
             }
-        } while (opt != 9);
-        System.out.println("Goodbye");
+            catch (DataAccessException e){
+                System.out.println();
+                System.out.println(e.getMessage());
+                System.out.println();
+            }
+        } 
+        while (opt != 9);
     }
 
-    private static void createWine(Scanner keyboard, Model model) {
+    private static void createWine(Scanner keyboard, Model model) throws DataAccessException {
         Wine w = readWine(keyboard);
         if (model.addWine(w)) {
             System.out.println("Wine added to database.");
@@ -87,9 +93,8 @@ public class MainApp {
         System.out.println();
     }
 
-    private static void deleteWine(Scanner keyboard, Model model){
-        System.out.print("Enter the name of wine you want to delete: ");
-        int id = Integer.parseInt(keyboard.nextLine());
+    private static void deleteWine(Scanner keyboard, Model model) throws DataAccessException{
+        int id = getInt(keyboard, "Enter the name of wine you want to delete: " ,-1);
         Wine w;
         
         w = model.findWineById(id);
@@ -107,10 +112,10 @@ public class MainApp {
         
     }
     
-    private static void editWine(Scanner keyboard, Model model){
-        System.out.print("Enter the Wine ID of the wine you want to edit: ");
-        int id = Integer.parseInt(keyboard.nextLine());
+    private static void editWine(Scanner keyboard, Model model) throws DataAccessException{
+        int id = getInt(keyboard, "Enter the name of wine you want to edit: ", -1);
         Wine w;
+
         
         w = model.findWineById(id);
         if (w != null){
@@ -158,14 +163,11 @@ public class MainApp {
         String line;
 
         wineryName = getString(keyb, "Enter name of wine: ");
-        line = getString(keyb, "Enter year of wine: ");
-        yearMade = Integer.parseInt(line);
+        yearMade = getInt(keyb, "Enter year of wine: ",0);
         type = getString(keyb, "Enter type of wine: ");
-        line = getString(keyb, "Enter serving tempurature of wine: ");
-        tempurature = Double.parseDouble(line);
+        tempurature = getDouble(keyb, "Enter serving tempurature of wine: ",0);
         description = getString(keyb, "Enter description of wine: ");
-        line = getString(keyb, "Enter winery id where wine was made: ");
-        wineryId = Integer.parseInt(line);
+        wineryId = getInt(keyb, "Enter winery id where wine was made: ", -1);
 
         Wine w
                 = new Wine(wineryName, yearMade, type,
@@ -178,41 +180,36 @@ public class MainApp {
         String wineryName, type, description;
         int yearMade, wineryId;
         double tempurature;
-        String line1, line2, line3; 
         
         wineryName = getString(keyboard, "Enter name of wine[" + w.getWineryName() + "]: ");
-        line1 = getString(keyboard, "Enter year of wine[" + w.getYearMade() + "]: ");
+        yearMade = getInt(keyboard, "Enter year of wine[" + w.getYearMade() + "]: " , 0);
         type = getString(keyboard, "Enter type of wine[" + w.getType() + "]: ");
-        line2 = getString(keyboard, "Enter serving tempurature of wine[" + w.getTempurature() + "]: ");
+        tempurature = getDouble(keyboard, "Enter serving tempurature of wine[" + w.getTempurature() + "]: ", 0);
         description = getString(keyboard, "Enter description of wine[" + w.getDescription() + "]: ");
-        line3 = getString(keyboard, "Enter winery id where the wine was made [" + w.getWineryId()+ "]: ");
-        wineryId = Integer.parseInt(line3);
+        wineryId = getInt(keyboard, "Enter winery id where the wine was made [" + w.getWineryId()+ "]: " ,-1);
         
         if (wineryName.length() !=0){
             w.setWineryName(wineryName);
         }
-        if (line1.length() !=0){
-            yearMade = Integer.parseInt(line1);
-            w.setYearMade(yearMade);
+        if (yearMade !=w.getYearMade()){
+           w.setYearMade(yearMade);
         }
         if (type.length() !=0){
             w.setType(type);
         }
-        if (line2.length() !=0){
-            tempurature = Integer.parseInt(line2);
+        if (tempurature !=w.getTempurature()){
             w.setTempurature(tempurature);
         }
         if (description.length() !=0){
             w.setDescription(description);
         }
-        if (line3.length() !=0){
-            wineryId = Integer.parseInt(line3);
+        if (wineryId !=w.getWineryId()){
             w.setWineryId(wineryId);
         }
         
     }
     
-    private static void createWinery(Scanner keyboard, Model model) {
+    private static void createWinery(Scanner keyboard, Model model) throws DataAccessException {
         Winery wy = readWinery(keyboard);
         if (model.addWinery(wy)) {
             System.out.println("Winery added to database.");
@@ -222,9 +219,8 @@ public class MainApp {
         System.out.println();
     }
 
-    private static void deleteWinery(Scanner keyboard, Model model){
-        System.out.print("Enter the id of winery you want to delete: ");
-        int id = Integer.parseInt(keyboard.nextLine());
+    private static void deleteWinery(Scanner keyboard, Model model) throws DataAccessException{
+        int id = getInt(keyboard, "Enter the id of winery you want to delete: ", -1);
         Winery wy;
         
         wy = model.findWineryById(id);
@@ -242,9 +238,8 @@ public class MainApp {
         
     }
     
-    private static void editWinery(Scanner keyboard, Model model){
-        System.out.print("Enter the Winery ID of the winery you want to edit: ");
-        int id = Integer.parseInt(keyboard.nextLine());
+    private static void editWinery(Scanner keyboard, Model model) throws DataAccessException{
+        int id = getInt(keyboard, "Enter the id of winery you want to edit: ",-1);
         Winery wy;
         
         wy = model.findWineryById(id);
@@ -336,4 +331,51 @@ public class MainApp {
         System.out.print(prompt);
         return keyboard.nextLine();
     }
+    
+    private static int getInt(Scanner keyboard, String prompt , int defaultValue){
+        int opt = defaultValue;
+        boolean finished = false;
+        
+        do{
+            try {
+                System.out.print(prompt);
+                String line = keyboard.nextLine();
+                if(line.length() > 0){
+                    opt = Integer.parseInt(line);
+                }
+                
+                finished = true;
+            }
+            catch (NumberFormatException e){
+                System.out.println("Exception: " + e.getMessage());
+            }
+        }
+        while(!finished);
+        
+        return opt;
+    }
+    
+    private static double getDouble(Scanner keyboard, String prompt , double defaultValue){
+        double opt = defaultValue;
+        boolean finished = false;
+        
+        do{
+            try {
+                System.out.print(prompt);
+                String line = keyboard.nextLine();
+                if(line.length() > 0){
+                    opt = Double.parseDouble(line);
+                }
+                
+                finished = true;
+            }
+            catch (NumberFormatException e){
+                System.out.println("Exception: " + e.getMessage());
+            }
+        }
+        while(!finished);
+        
+        return opt;
+    }
+      
 }
