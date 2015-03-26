@@ -9,7 +9,7 @@ public class Winery {
     private String phoneNo;
     private String email;
     private String webAddress;
-    private int wineId;
+    //private int wineId;
     
     public Winery(int id, String wn, String a, String cn,String pn, String e,String wa ) {
         this.id = id;
@@ -69,11 +69,11 @@ public class Winery {
         this.webAddress=webAddress;
     }
 
-    public int getWineId() {
+    /*public int getWineId() {
         return wineId;
     }
 
     public void setWineId(int wineId) {
         this.wineId = wineId;
-    }
+    }*/
 }

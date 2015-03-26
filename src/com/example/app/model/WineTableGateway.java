@@ -142,7 +142,7 @@ public class WineTableGateway {
                 " WHERE " + COLUMN_WINEID + " = ?";
         
         stmt = mConnection.prepareStatement(query);
-        stmt.setString(1, w.getWineryName());
+        stmt.setString(1, w.getName());
         stmt.setInt(2, w.getYearMade());
         stmt.setString(3, w.getType());
         stmt.setDouble(4, w.getTempurature());

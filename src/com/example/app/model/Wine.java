@@ -1,9 +1,9 @@
 package com.example.app.model;
 
-public class Wine {
+public class Wine implements Comparable<Wine>{
 
     private int id;
-    private String wineryName;
+    private String name;
     private int yearMade;
     private String type;
     private double tempurature;
@@ -16,7 +16,7 @@ public class Wine {
 
     public Wine(int id, String wn, int y, String ty, double t, String d, int wId) {
         this.id = id;
-        this.wineryName = wn;
+        this.name = wn;
         this.yearMade = y;
         this.type = ty;
         this.tempurature = t;
@@ -32,12 +32,12 @@ public class Wine {
         this.id = id;
     }
     
-    public String getWineryName() {
-        return wineryName;
+    public String getName() {
+        return name;
     }
 
-    public void setWineryName(String wineryName) {
-        this.wineryName = wineryName;
+    public void setName(String name) {
+        this.name = name;
     }
 
     /**
@@ -104,6 +104,12 @@ public class Wine {
         this.wineryId = wineryId;
     }
 
-
+    @Override
+    public int compareTo(Wine that) {
+        String myName = this.getName().toLowerCase();
+        String yourName = that.getName().toLowerCase();
+        
+        return myName.compareTo(yourName);
+    }
 
 }

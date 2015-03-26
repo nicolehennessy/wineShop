@@ -44,12 +44,22 @@ public class Model {
     public List<Wine> getWines() {
         return new ArrayList<Wine>(this.wines);
     }
+    
+    public List<Wine> getWinesByWineryId(int wineryId) {
+        List<Wine> list = new ArrayList<Wine>();
+        for(Wine w : this.wines){
+            if (w.getWineryId() == wineryId){
+                list.add(w);
+            }
+        }
+        return list;
+    }
 
     public boolean addWine(Wine w) throws DataAccessException {
         boolean result = false;
         try{
             int id = this.wineGateway.insertWine(
-                    w.getWineryName(),w.getYearMade(),w.getType(),w.getTempurature(),w.getDescription(),w.getWineryId());
+                    w.getName(),w.getYearMade(),w.getType(),w.getTempurature(),w.getDescription(),w.getWineryId());
             if (id != -1){
                 w.setId(id);
                 this.wines.add(w);

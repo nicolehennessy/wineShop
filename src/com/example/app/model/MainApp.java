@@ -1,14 +1,19 @@
 package com.example.app.model;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Scanner;
 
 public class MainApp {
+    
+    private static final int NAME_ORDER = 1;
+    private static final int TEMPURATURE_ORDER = 2;
 
     public static void main(String[] args) {
         Scanner keyboard = new Scanner(System.in);
         Model model;
-        int opt = 9;
+        int opt = 12;
         do {
             try{
                 model  = Model.getInstance();
@@ -16,16 +21,19 @@ public class MainApp {
                 System.out.println("2. Delete existing Wine");
                 System.out.println("3. Edit existing Wine");
                 System.out.println("4. View all Wines");
+                System.out.println("5. View all Wines Order by Tempurature");
+                System.out.println("6. View a single Wine");
                 System.out.println();
-                System.out.println("5. Create new Winery");
-                System.out.println("6. Delete existing Winery");
-                System.out.println("7. Edit existing Winery");
-                System.out.println("8. View all Winerys");
+                System.out.println("7. Create new Winery");
+                System.out.println("8. Delete existing Winery");
+                System.out.println("9. Edit existing Winery");
+                System.out.println("10. View all Winerys");
+                System.out.println("11. View a single Winery");
                 System.out.println();
-                System.out.println("9. Exit");
+                System.out.println("12. Exit");
                 System.out.println();
 
-                opt = getInt(keyboard, "Enter option: " , 9);
+                opt = getInt(keyboard, "Enter option: " , 12);
 
                 System.out.println("You chose option " + opt);
 
@@ -47,28 +55,44 @@ public class MainApp {
                     }
                     case 4: {
                         System.out.println("Viewing wine.");
-                        viewWines(model);
+                        viewWines(model, NAME_ORDER);
+                        break;
+                    }
+                    case 5: {
+                        System.out.println("Viewing wine Order by tempurature.");
+                        viewWines(model, TEMPURATURE_ORDER);
+                        break;
+                    }
+                     case 6: {
+                        System.out.println("Viewing a single wine.");
+                        viewWine(keyboard,model);
                         break;
                     }
 
-                    case 5: {
+                    case 7: {
                         System.out.println("Creating winery.");
                         createWinery(keyboard, model);
                         break;
                     }
-                    case 6: {
+                    case 8: {
                         System.out.println("Deleting winery.");
                         deleteWinery(keyboard, model);
                         break;
                     }
-                    case 7: {
+                    case 9: {
                         System.out.println("Editing winery.");
                         editWinery(keyboard, model);
                         break;
                     }
-                    case 8: {
+                    case 10: {
                         System.out.println("Viewing winery.");
                         viewWinerys(model);
+                        break;
+
+                    }
+                    case 11: {
+                        System.out.println("Viewing a single winery.");
+                        viewWinery(keyboard, model);
                         break;
 
                     }
@@ -80,7 +104,7 @@ public class MainApp {
                 System.out.println();
             }
         } 
-        while (opt != 9);
+        while (opt != 12);
     }
 
     private static void createWine(Scanner keyboard, Model model) throws DataAccessException {
@@ -94,7 +118,7 @@ public class MainApp {
     }
 
     private static void deleteWine(Scanner keyboard, Model model) throws DataAccessException{
-        int id = getInt(keyboard, "Enter the name of wine you want to delete: " ,-1);
+        int id = getInt(keyboard, "Enter the id of wine you want to delete: " ,-1);
         Wine w;
         
         w = model.findWineById(id);
@@ -105,6 +129,29 @@ public class MainApp {
             else{
                 System.out.print("Wine NOT deleted.");
             }
+        }
+        else{
+            System.out.print("Wine NOT found.");   
+        }
+        
+    }
+    
+    private static void viewWine(Scanner keyboard, Model model) throws DataAccessException{
+        int id = getInt(keyboard, "Enter the id of wine you want to view: " ,-1);
+        Wine w;
+        
+        w = model.findWineById(id);
+        if (w != null){
+            System.out.println();
+            System.out.println();            
+            System.out.println("Name            : " + w.getName());
+            System.out.println("YearMade        : " + w.getYearMade());
+            System.out.println("Type            : " + w.getType());
+            System.out.println("Tempurature     : " + w.getTempurature());
+            System.out.println("Description     : " + w.getDescription());
+            System.out.println("Winery ID       : " + w.getWineryId());
+            System.out.println();
+            System.out.println();
         }
         else{
             System.out.print("Wine NOT found.");   
@@ -132,24 +179,22 @@ public class MainApp {
         }
     }
     
-    private static void viewWines(Model model) {
+    private static void viewWines(Model model, int order) {
         List<Wine> wines = model.getWines();
-
         System.out.println();
         if (wines.isEmpty()) {
             System.out.println("There are no wines in the database");
-        } else {
-            System.out.printf("%10s %20s %20s %15s %22s %20s %10s\n", "WineID", "Name", "YearMade", "Type", "Temperature", "Description", "Winery");
-            for (Wine wi : wines) {
-                System.out.printf("%10s %20s %20d %15s %22f %20s %10d\n",
-                        wi.getId(),
-                        wi.getWineryName(),
-                        wi.getYearMade(),
-                        wi.getType(),
-                        wi.getTempurature(),
-                        wi.getDescription(),
-                        wi.getWineryId());
+        }
+        else {
+            if(order == NAME_ORDER){
+                Collections.sort(wines);
             }
+            else if(order == TEMPURATURE_ORDER){
+                Comparator<Wine> cmptr = new WineTempuratureComparator();
+                Collections.sort(wines, cmptr);
+            }
+            
+            displayWines(wines, model);
         }
         System.out.println();
 
@@ -181,7 +226,7 @@ public class MainApp {
         int yearMade, wineryId;
         double tempurature;
         
-        wineryName = getString(keyboard, "Enter name of wine[" + w.getWineryName() + "]: ");
+        wineryName = getString(keyboard, "Enter name of wine[" + w.getName() + "]: ");
         yearMade = getInt(keyboard, "Enter year of wine[" + w.getYearMade() + "]: " , 0);
         type = getString(keyboard, "Enter type of wine[" + w.getType() + "]: ");
         tempurature = getDouble(keyboard, "Enter serving tempurature of wine[" + w.getTempurature() + "]: ", 0);
@@ -189,7 +234,7 @@ public class MainApp {
         wineryId = getInt(keyboard, "Enter winery id where the wine was made [" + w.getWineryId()+ "]: " ,-1);
         
         if (wineryName.length() !=0){
-            w.setWineryName(wineryName);
+            w.setName(wineryName);
         }
         if (yearMade !=w.getYearMade()){
            w.setYearMade(yearMade);
@@ -207,6 +252,22 @@ public class MainApp {
             w.setWineryId(wineryId);
         }
         
+    }
+    
+    private static void displayWines(List<Wine> wines, Model model){
+        System.out.printf("%10s %20s %20s %15s %22s %20s %20s\n", 
+                "WineID", "Name", "YearMade", "Type", "Temperature", "Description", "Winery");
+        for (Wine wi : wines) {
+            Winery wy = model.findWineryById(wi.getWineryId());
+            System.out.printf("%10s %20s %20d %15s %22f %20s %20s\n",
+                    wi.getId(),
+                    wi.getName(),
+                    wi.getYearMade(),
+                    wi.getType(),
+                    wi.getTempurature(),
+                    wi.getDescription(),
+                    (wy !=null) ? wy.getWineryName() :"NULL" );
+        }
     }
     
     private static void createWinery(Scanner keyboard, Model model) throws DataAccessException {
@@ -280,7 +341,40 @@ public class MainApp {
         System.out.println();
 
     }
-
+    
+    private static void viewWinery(Scanner keyboard, Model model) throws DataAccessException{
+        int id = getInt(keyboard, "Enter the id of winery you want to view: " ,-1);
+        Winery wy;
+        
+        wy = model.findWineryById(id);
+        if (wy != null){
+            System.out.println();
+            System.out.println();            
+            System.out.println("Name                    : " + wy.getWineryName());
+            System.out.println("Address                 : " + wy.getAddress());
+            System.out.println("Contact Name            : " + wy.getContactName());
+            System.out.println("Phone No                : " + wy.getPhoneNo());
+            System.out.println("Email                   : " + wy.getEmail());
+            System.out.println("Web Address             : " + wy.getWebAddress());
+            System.out.println();
+            
+            List<Wine> wineryList = model.getWinesByWineryId(wy.getWineryId());
+            if(wineryList.isEmpty()){
+                System.out.println("This winery has no wines.");
+            }
+            else{
+                System.out.println("This winery has the following wines.");
+                System.out.println();
+                displayWines(wineryList, model);
+            }
+            System.out.println();
+        }
+        else{
+            System.out.print("Winery NOT found.");   
+        }
+        
+    }
+    
     private static Winery readWinery(Scanner keyb) {
         String wineryName, address, contactName, phoneNo, email, webAddress;
 
